@@ -21,7 +21,7 @@ try {
 
     $rep = new InMemoryUsersRepository();
     $user1 = new User(1, "Ember Song", "Ember");
-    $user2 = new User(2, "Иван Иванов", "Ivan");
+    $user2 = new User(2, "Vasa Pumpkin", "Vasa");
 
     $rep->save($user1);
     $rep->save($user2);
