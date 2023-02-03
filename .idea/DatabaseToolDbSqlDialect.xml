@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DatabaseToolDbSqlDialect">
+    <option name="dialect" value="Oracle" />
+    <option name="dialects">
+      <map>
+        <entry key="$APPLICATION_CONFIG_DIR$/console/e46c073c-c3b5-42c5-badb-f739bf7049fb/console.sql" value="SQLite" />
+      </map>
+    </option>
+  </component>
+</project>

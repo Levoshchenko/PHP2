@@ -1,11 +1,22 @@
 <?php
 
+use GeekBrains\LevelTwo\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use GeekBrains\LevelTwo\Blog\User;
+use GeekBrains\LevelTwo\Blog\UUID;
 use GeekBrains\LevelTwo\Person\Name;
 use GeekBrains\LevelTwo\Blog\Post;
 use GeekBrains\LevelTwo\Blog\Comment;
 
+
 include __DIR__ . "/vendor/autoload.php";
+
+$connection = new PDO('sqlite:' . __DIR__ . '/blog.sqlite');
+
+$usersRepository = new SqliteUsersRepository($connection);
+
+$usersRepository->save(new User(UUID::random(), new Name('Anya', 'Nikitina'), 'admin'));
+$usersRepository->save(new User(UUID::random(), new Name('Anna', 'Petrova'), 'user'));
+
 
 $faker = Faker\Factory::create('ru_RU');
 $name = new Name(

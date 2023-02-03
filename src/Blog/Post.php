@@ -4,49 +4,52 @@ namespace GeekBrains\LevelTwo\Blog;
 
 class Post
 {
-    private int $id;
+    private UUID $uuid;
     private User $user;
+    private string $title;
     private string $text;
 
     public function __construct(
-        int $id,
+        UUID $uuid,
         User $user,
+        string $title,
         string $text
     )
     {
-        $this->id = $id;
+        $this->uuid = $uuid;
+        $this->title = $title;
         $this->text = $text;
         $this->user = $user;
     }
 
     /**
-     * @return int
+     * @return UUID
      */
-    public function getId(): int
+    public function getUuid(): UUID
     {
-        return $this->id;
+        return $this->uuid;
     }
 
     /**
-     * @param int $id
+     * @param UUID $uuid
      */
-    public function setId(int $id): void
+    public function setUuid(UUID $uuid): void
     {
-        $this->id = $id;
+        $this->uuid = $uuid;
     }
 
     /**
-     * @return \GeekBrains\LevelTwo\Blog\User
+     * @return User
      */
-    public function getUser(): \GeekBrains\LevelTwo\Blog\User
+    public function getUser(): User
     {
         return $this->user;
     }
 
     /**
-     * @param \GeekBrains\LevelTwo\Blog\User $user
+     * @param User $user
      */
-    public function setUser(\GeekBrains\LevelTwo\Blog\User $user): void
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
@@ -65,6 +68,22 @@ class Post
     public function setText(string $text): void
     {
         $this->text = $text;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
     }
 
     public function __toString()

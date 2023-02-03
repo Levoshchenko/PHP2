@@ -5,7 +5,7 @@ namespace GeekBrains\LevelTwo\Blog;
 class Comment
 {
     public function __construct(
-        private int $id,
+        private UUID $uuid,
         private User $user,
         private Post $post,
         private string $text
@@ -15,19 +15,19 @@ class Comment
     }
 
     /**
-     * @return int
+     * @return UUID
      */
-    public function getId(): int
+    public function getUuid(): UUID
     {
-        return $this->id;
+        return $this->uuid;
     }
 
     /**
-     * @param int $id
+     * @param UUID $uuid
      */
-    public function setId(int $id): void
+    public function setUuid(UUID $uuid): void
     {
-        $this->id = $id;
+        $this->uuid = $uuid;
     }
 
     /**
