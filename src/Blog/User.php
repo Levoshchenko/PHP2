@@ -5,70 +5,65 @@ use GeekBrains\LevelTwo\Person\Name;
 
 class User
 {
-    private int $id;
-    private Name $username;
-    private string $login;
+    private UUID $uuid;
+    private Name $name;
+    private string $username;
 
     /**
-     * @param int $id
-     * @param Name $username
+     * @param UUID $uuid
+     * @param Name $name
      * @param string $login
      */
-    public function __construct(int $id, Name $username, string $login)
+    public function __construct(UUID $uuid, Name $name, string $login)
     {
-        $this->id = $id;
-        $this->username = $username;
-        $this->login = $login;
+        $this->uuid = $uuid;
+        $this->name = $name;
+        $this->username = $login;
     }
+
     public function __toString(): string
     {
-        return "Юзер $this->id с именем $this->username и логином $this->login." . PHP_EOL;
+        return "Юзер $this->uuid с именем $this->name и логином $this->username." . PHP_EOL;
     }
 
     /**
-     * @return int
+     * @return UUID
      */
-    public function id(): int{
-        return $this->id;
-    }
-    /**
-     * @param int $id
-     */
-    public function setId(int $id): void
+    public function uuid(): UUID
     {
-        $this->id = $id;
+        return $this->uuid;
     }
 
     /**
      * @return Name
      */
-    public function getUsername(): Name
+    public function name(): Name
     {
-        return $this->username;
+        return $this->name;
     }
 
     /**
-     * @param Name $username
+     * @param Name $name
      */
-    public function setUsername(Name $username): void
+    public function setName(Name $name): void
     {
-        $this->username = $username;
+        $this->name = $name;
     }
 
     /**
      * @return string
      */
-    public function getLogin(): string
+    public function username(): string
     {
-        return $this->login;
+        return $this->username;
     }
 
     /**
-     * @param string $login
+     * @param string $username
      */
-    public function setLogin(string $login): void
+    public function setUsername(string $username): void
     {
-        $this->login = $login;
+        $this->username = $username;
     }
 
 }

@@ -1,11 +1,12 @@
 <?php
 
-namespace GeekBrains\LevelTwo\Blog\Repositories;
+namespace GeekBrains\LevelTwo\Blog\Repositories\UsersRepository;
 
 use GeekBrains\LevelTwo\Blog\Exceptions\UserNotFoundException;
 use GeekBrains\LevelTwo\Blog\User;
+use GeekBrains\LevelTwo\Blog\UUID;
 
-class InMemoryUsersRepository
+class InMemoryUsersRepository implements UsersRepositoryInterface
 {
     /**
      * @var User[]
@@ -21,14 +22,29 @@ class InMemoryUsersRepository
     }
 
     /**
-     * @param int $id
+     * @return array
+     */
+    public function getUsers(): array
+    {
+        return $this->users;
+    }
+
+    /**
+     * @param array $users
+     */
+    public function setUsers(array $users): void
+    {
+        $this->users = $users;
+    }
+    /**
+     * @param UUID $uuid
      * @return User
      * @throws UserNotFoundException
      */
-    public function get(int $id): User
+    public function get(UUID $uuid): User
     {
         foreach ($this->users as $user) {
-            if ($user->id() === $id) {
+            if ($user->uuid() === $uuid) {
                 return $user;
             }
         }
