@@ -16,8 +16,7 @@
         "ext-pdo": "*",
         "php": "^8.2",
         "symfony/polyfill-uuid": "^1.27",
-      "ext-mongodb": "*",
-      "ext-http": "*"
+      "ext-mongodb": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
