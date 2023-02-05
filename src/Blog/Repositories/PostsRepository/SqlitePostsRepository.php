@@ -75,64 +75,8 @@ class SqlitePostsRepository implements PostsRepositoryInterface
 
     }
 
-    /**
-     * @throws PostNotFoundException
-     */
-    public function deletePost(UUID $postUuId): bool
+    public function delete(UUID $uuid): void
     {
-        $statement = $this->connection->prepare(
-            'DELETE FROM posts WHERE uuid = :uuid'
-        );
-
-        $result = $statement->execute([
-            ':uuid' => $postUuId,
-        ]);
-
-        if (!$result) {
-            throw new PostNotFoundException(
-                "Cannot not delete: $postUuId"
-            );
-        }
-        return true;
+        // TODO: Implement delete() method.
     }
-    
-    
-    /**
-     * @throws PostNotFoundException
-     * @throws UserNotFoundException|InvalidArgumentException
-     */
-    public function get(UUID $uuid): Post
-    {
-        $statement = $this->connection->prepare(
-            'SELECT * FROM posts WHERE uuid = :uuid'
-        );
-
-        $statement->execute([
-            ':uuid' => $uuid,
-        ]);
-
-        return $this->getPost($statement, $uuid);
-    }
-
-
-    /**
-     * @throws UserNotFoundException|PostNotFoundException
-     * @throws InvalidArgumentException
-     */
-    public function getPost(\PDOStatement $statement, string $postUuId): Post
-    {
-        $result = $statement->fetch(\PDO::FETCH_ASSOC);
-        if (!$result) {
-            throw new PostNotFoundException(
-                "Cannot find: $postUuId"
-            );
-        }
-        $user = new SqliteUsersRepository($this->connection);
-        return new Post(
-            new UUID($result['uuid']),
-            $user->get(new UUID($result['username_uuid'])),
-            $result['title'],
-            $result['text']
-        );
-
 }

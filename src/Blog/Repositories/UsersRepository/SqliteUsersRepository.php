@@ -2,6 +2,8 @@
 
 namespace GeekBrains\LevelTwo\Blog\Repositories\UsersRepository;
 
+use GeekBrains\LevelTwo\Blog\Commands\Arguments;
+use GeekBrains\LevelTwo\Blog\Commands\CreateUserCommand;
 use GeekBrains\LevelTwo\Blog\Exceptions\InvalidArgumentException;
 use GeekBrains\LevelTwo\Blog\Exceptions\UserNotFoundException;
 use GeekBrains\LevelTwo\Blog\User;
@@ -53,7 +55,7 @@ VALUES (:first_name, :last_name, :uuid, :username)'
      * @throws UserNotFoundException
      * @throws InvalidArgumentException
      */
-    public function getByUsername($username): User
+    public function getByUsername(string $username): User
     {
         $statement = $this->connection->prepare(
             'SELECT * FROM users WHERE username = :username'
