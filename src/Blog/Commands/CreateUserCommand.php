@@ -11,7 +11,7 @@ use GeekBrains\LevelTwo\Blog\UUID;
 use GeekBrains\LevelTwo\Person\Name;
 use MongoDB\Driver\Exception\CommandException;
 
-class CreateUserCommand
+readonly class CreateUserCommand
 {
     public function __construct(
         private UsersRepositoryInterface $usersRepository
