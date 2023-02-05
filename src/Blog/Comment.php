@@ -33,7 +33,6 @@ class Comment
     /**
      * @return User
      */
-
     public function getUser(): User
     {
         return $this->user;
