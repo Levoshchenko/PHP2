@@ -1,22 +1,76 @@
 <?php
 
-use GeekBrains\LevelTwo\Blog\Repositories\UsersRepository\SqliteUsersRepository;
+use GeekBrains\LevelTwo\Blog\Commands\Arguments;
+use GeekBrains\LevelTwo\Blog\Repositories\CommentsRepository\SqliteCommentsRepository;
 use GeekBrains\LevelTwo\Blog\Repositories\PostsRepository\SqlitePostsRepository;
+use GeekBrains\LevelTwo\Blog\Repositories\UsersRepository\SqliteUsersRepository;
+use GeekBrains\LevelTwo\Blog\User;
+use GeekBrains\LevelTwo\Blog\Post;
+use GeekBrains\LevelTwo\Blog\Comment;
 use GeekBrains\LevelTwo\Blog\UUID;
-
-include __DIR__ . "/vendor/autoload.php";
+use GeekBrains\LevelTwo\Person\Name;
 
 $connection = new PDO('sqlite:' . __DIR__ . '/blog.sqlite');
+require_once 'vendor/autoload.php';
 
-$userRepository = new SqliteUsersRepository($connection);
-$postsRepository = new SqlitePostsRepository($connection);
+$faker = Faker\Factory::create('ru_RU');
 
-try {
-    $user = $userRepository->get(new UUID('bab851d7-d24e-447d-957e-4e7daa65a946'));
+//Сделал пока на Faker генерацию пользвателей, комментариев и постов
+$argvArr = Arguments::fromArgv($argv);
+print_r($argv);
+die;
+//$type = $argvArr->get('type');
 
-    $post = $postsRepository->get(new UUID('ff932e66-3c96-4325-a6b2-641cacb1c6b8'));
+
+
+$sqlPost = new SqlitePostsRepository($connection);
+$post = $sqlPost->get(new UUID('2b1974fc-1fcc-43e1-8230-5166f27787d8'));
+
 
 print_r($post);
-} catch (Exception $e) {
-    echo $e->getMessage();
-}
+echo '---';
+die;
+$sqlComment = new SqliteCommentsRepository($connection);
+$sqlUser = new SqliteUsersRepository($connection);
+$userComment = $sqlUser->getRandomUser(); //выбираем рандомного пользователя от которого будет комменатрий
+$sqlComment->getUserComments($userComment);
+die;
+
+$sqlUser = new SqliteUsersRepository($connection);
+$user = new User(  //создаем нового пользователя
+    UUID::random(),
+    $faker->userName(),
+    new Name(
+        $faker->firstName(),
+        $faker->lastName()
+    )
+
+);
+$sqlUser->save($user); //записываем нового пользователя
+
+echo $user.PHP_EOL;
+echo ' --------------------------------------------------'.PHP_EOL;
+
+$sqlPost = new SqlitePostsRepository($connection);
+$post = new Post( //создаем статью от имени нового пользователя
+    UUID::random(),
+    $user,
+    $faker->text(60),
+    $faker->text(200)
+
+);
+$sqlPost->save($post); //сохраняем статью
+echo $post.PHP_EOL;
+echo ' --------------------------------------------------'.PHP_EOL;
+
+$userComment = $sqlUser->getRandomUser(); //выбираем рандомного пользователя от которого будет комменатрий
+
+$sqlComment = new SqliteCommentsRepository($connection);
+$comment = new Comment(
+    UUID::random(),
+    $userComment,
+    $post,
+    $faker->text(200)
+);
+$sqlComment->save($comment);
+echo $comment;
