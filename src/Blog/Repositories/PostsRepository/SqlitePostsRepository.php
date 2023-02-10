@@ -101,7 +101,7 @@ class SqlitePostsRepository implements PostsRepositoryInterface
      * @throws PostNotFoundException
      * @throws UserNotFoundException|InvalidArgumentException
      */
-    public function get(UUID $uuid): Post
+    public function getPost(UUID $uuid): Post
     {
         $statement = $this->connection->prepare(
             'SELECT * FROM posts WHERE uuid = :uuid'
@@ -113,26 +113,3 @@ class SqlitePostsRepository implements PostsRepositoryInterface
 
         return $this->getPost($statement, $uuid);
     }
-
-
-    /**
-     * @throws UserNotFoundException|PostNotFoundException
-     * @throws InvalidArgumentException
-     */
-    public function getPost(\PDOStatement $statement, string $postUuId): Post
-    {
-        $result = $statement->fetch(\PDO::FETCH_ASSOC);
-        if (!$result) {
-            throw new PostNotFoundException(
-                "Cannot find: $postUuId"
-            );
-        }
-        $user = new SqliteUsersRepository($this->connection);
-        return new Post(
-            new UUID($result['uuid']),
-            $user->get(new UUID($result['username_uuid'])),
-            $result['title'],
-            $result['text']
-        );
-
-}
