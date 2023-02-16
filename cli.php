@@ -15,7 +15,7 @@ require_once 'vendor/autoload.php';
 
 $faker = Faker\Factory::create('ru_RU');
 
-//Сделал пока на Faker генерацию пользвателей, комментариев и постов
+//Сделала пока на Faker генерацию пользвателей, комментариев и постов
 $argvArr = Arguments::fromArgv($argv);
 print_r($argv);
 die;
@@ -32,7 +32,7 @@ echo '---';
 die;
 $sqlComment = new SqliteCommentsRepository($connection);
 $sqlUser = new SqliteUsersRepository($connection);
-$userComment = $sqlUser->getRandomUser(); //выбираем рандомного пользователя от которого будет комменатрий
+$userComment = $sqlUser->getRandomUser();
 $sqlComment->getUserComments($userComment);
 die;
 

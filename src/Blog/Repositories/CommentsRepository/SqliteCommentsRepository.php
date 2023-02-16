@@ -13,11 +13,13 @@ use GeekBrains\LevelTwo\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use GeekBrains\LevelTwo\Blog\User;
 use GeekBrains\LevelTwo\Blog\UUID;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 class SqliteCommentsRepository implements CommentsRepositoryInterface
 {
     public function __construct(
-        private PDO $connection
+        private PDO $connection,
+         private LoggerInterface $logger,
     )
     {
     }
@@ -40,6 +42,8 @@ class SqliteCommentsRepository implements CommentsRepositoryInterface
             ':post_uuid' => $comment->getPost()->getUuid(),
             ':text' => $comment->getText()
         ]);
+        
+         $this->logger->info('Comment creat: ' . $comment->getUuid());
     }
 
     /**
@@ -68,6 +72,7 @@ class SqliteCommentsRepository implements CommentsRepositoryInterface
     {
         $result = $statement->fetch(PDO::FETCH_CLASS);
         if (!$result) {
+            $this->logger->warning("Cannot find: $text");
             throw new CommentNotFoundException(
                 "Cannot find: $text"
             );

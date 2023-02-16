@@ -14,11 +14,13 @@ use GeekBrains\LevelTwo\Http\Request;
 use GeekBrains\LevelTwo\Http\Response;
 use GeekBrains\LevelTwo\Http\SuccessfulResponse;
 use GeekBrains\LevelTwo\Person\Name;
+use Psr\Log\LoggerInterface;
 
 class CreateUser implements ActionInterface
 {
     public function __construct(
         private UsersRepositoryInterface $usersRepository,
+         private LoggerInterface $logger,
     )
     {
     }
@@ -30,6 +32,7 @@ class CreateUser implements ActionInterface
      */
     public function handle(Request $request): Response
     {
+    	$this->logger->info("Create user command started");
         $newUserUuid = UUID::random();
         try {
             $user = new User(

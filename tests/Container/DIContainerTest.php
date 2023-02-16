@@ -8,6 +8,7 @@ use GeekBrains\LevelTwo\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use GeekBrains\LevelTwo\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
 use PDO;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class DIContainerTest extends TestCase
 {

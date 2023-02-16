@@ -9,14 +9,15 @@ use GeekBrains\LevelTwo\Blog\UUID;
 use GeekBrains\LevelTwo\Person\Name;
 use \PDO;
 use \PDOStatement;
+use Psr\Log\LoggerInterface;
 
 class SqliteUsersRepository implements UsersRepositoryInterface
 {
-    private PDO $connection;
-
-    public function __construct(PDO $connection)
+     public function __construct(
+        private PDO $connection,
+        private LoggerInterface $logger,
+    )
     {
-        $this->connection = $connection;
     }
     public function save(User $user): void
     {
@@ -24,12 +25,13 @@ class SqliteUsersRepository implements UsersRepositoryInterface
             'INSERT INTO users (first_name, last_name, uuid, username)
 VALUES (:first_name, :last_name, :uuid, :username)'
         );
-        $statement->execute([
-            ':first_name' => $user->name()->first(),
-            ':last_name' => $user->name()->last(),
-            ':uuid' => (string)$user->uuid(),
-            ':username' => $user->username(),
+         $statement->execute([
+            ':uuid' => $user->getUuid(),
+            ':first_name' => $user->getName()->first(),
+            ':last_name' => $user->getName()->last(),
+            ':username' => $user->getUsername()
         ]);
+        $this->logger->info('User creat: ' . $user->getUuid());
     }
 
     /**
@@ -39,21 +41,21 @@ VALUES (:first_name, :last_name, :uuid, :username)'
     public function get(UUID $uuid): User
     {
         $statement = $this->connection->prepare(
-            'SELECT * FROM users WHERE uuid = ?'
+            'SELECT * FROM users WHERE uuid = :uuid'
         );
-        $statement->execute([(string)$uuid]);
-        $result = $statement->fetch(PDO::FETCH_ASSOC);
-        if ($result === false) {
-            throw new UserNotFoundException("Cannot get user: $uuid");
-        }
+
+        $statement->execute([
+            ':uuid' => $uuid,
+        ]);
         return $this->getUser($statement, $uuid);
     }
+
 
     /**
      * @throws UserNotFoundException
      * @throws InvalidArgumentException
      */
-    public function getByUsername($username): User
+   public function getByUsername(string $username): User
     {
         $statement = $this->connection->prepare(
             'SELECT * FROM users WHERE username = :username'
@@ -61,27 +63,45 @@ VALUES (:first_name, :last_name, :uuid, :username)'
         $statement->execute([
             ':username' => $username,
         ]);
-
-       return $this->getUser($statement, $username);
+        return $this->getUser($statement, $username);
     }
 
     /**
      * @throws UserNotFoundException
      * @throws InvalidArgumentException
      */
-    private function getUser(PDOStatement $statement, string $errorString): User
+    public function getRandomUser(): User
     {
-        $result = $statement->fetch(\PDO::FETCH_ASSOC);
-        if($result === false) {
+        $statement = $this->connection->prepare(
+            'SELECT * FROM users ORDER BY RANDOM() LIMIT 1'
+        );
+        $statement->execute([]);
+        return $this->getUser($statement, 'Random User');
+    }
+
+    //PDOStateme $statement - убрал потому как не смог разобраться почему в ошибку уходил
+
+    /**
+     * @throws UserNotFoundException
+     */
+    private function getUser(\PDOStatement $statement, string $username): User
+    {
+
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if (null === $result) {
+            $this->logger->warning('User no found: ' . $username);
             throw new UserNotFoundException(
-                "Cannot find user: $errorString"
+                "Cannot find user: $username"
             );
         }
+
         return new User(
             new UUID($result['uuid']),
-            new Name($result['first_name'],$result['last_name']),
             $result['username'],
+            new Name($result['first_name'], $result['last_name'])
         );
     }
+
 
 }

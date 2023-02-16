@@ -3,12 +3,12 @@
 namespace GeekBrains\LevelTwo\Blog\Commands;
 
 use GeekBrains\LevelTwo\Blog\Exceptions\ArgumentException;
+use GeekBrains\LevelTwo\Blog\Exceptions\CommandException;
 use GeekBrains\LevelTwo\Blog\Exceptions\UserNotFoundException;
 use GeekBrains\LevelTwo\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
 use GeekBrains\LevelTwo\Blog\User;
 use GeekBrains\LevelTwo\Blog\UUID;
 use GeekBrains\LevelTwo\Person\Name;
-use MongoDB\Driver\Exception\CommandException;
 
 class CreateUserCommand
 {
@@ -19,6 +19,7 @@ class CreateUserCommand
 
     /**
      * @throws ArgumentException
+     * @throws CommandException
      */
     public function handle(Arguments $arguments): void
     {
