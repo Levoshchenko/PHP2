@@ -5,6 +5,7 @@ namespace GeekBrains\LevelTwo\Http\Actions\User;
 
 
 use GeekBrains\LevelTwo\Blog\Exceptions\HttpException;
+use GeekBrains\LevelTwo\Blog\Exceptions\UserNotFoundException;
 use GeekBrains\LevelTwo\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
 use GeekBrains\LevelTwo\Blog\User;
 use GeekBrains\LevelTwo\Blog\UUID;
@@ -33,11 +34,13 @@ class CreateUser implements ActionInterface
     public function handle(Request $request): Response
     {
     	$this->logger->info("Create user command started");
-        $newUserUuid = UUID::random();
+        
+         $password = $request->jsonBodyField('password');
+         
         try {
-            $user = new User(
-                $newUserUuid,
+            $user = User::createFrom(
                 $request->jsonBodyField('username'),
+                $password,
                 new Name(
                     $request->jsonBodyField('first_name'),
                     $request->jsonBodyField('last_name')
@@ -54,5 +57,6 @@ class CreateUser implements ActionInterface
             'name'=> $user->getName(),
             'username' => $user->getUsername()
         ]);
+        $this->logger->info("User created: $newUserUuid");
     }
 }

@@ -1,10 +1,13 @@
 <?php
 
+use GeekBrains\Blog\UnitTests\DummyLogger;
 use GeekBrains\LevelTwo\Blog\Exceptions\UserNotFoundException;
 use GeekBrains\LevelTwo\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use GeekBrains\LevelTwo\Blog\User;
 use GeekBrains\LevelTwo\Blog\UUID;
 use GeekBrains\LevelTwo\Person\Name;
+use PDO;
+use PDOStatement;
 use PHPUnit\Framework\TestCase;
 
 class SqliteUsersRepositoryTest extends TestCase
@@ -93,10 +96,11 @@ class SqliteUsersRepositoryTest extends TestCase
             ->expects($this->once()) // Ожидаем, что будет вызван один раз
             ->method('execute') // метод execute
             ->with([ // с единственным аргументом - массивом
-                ':uuid' => '123e4567-e89b-12d3-a456-426614174000',
-                ':username' => 'ivan123',
-                ':first_name' => 'Ivan',
-                ':last_name' => 'Nikitin',
+                ':uuid' => '123e4567-e89b-12d3-a456-4266141740drthr',
+                ':username' => 'user1',
+                ':first_name' => 'test',
+                ':password' => '688029e2a4e21c21ed1f51883627278151bf00d29c27243533c6a3dc1cer463',
+                ':last_name' => 'test2',
             ]);
 
         $connectionStub->method('prepare')->willReturn($statementMock);
@@ -105,9 +109,9 @@ class SqliteUsersRepositoryTest extends TestCase
 
         $repository->save(
             new User( // Свойства пользователя точно такие,
-                new UUID('123e4567-e89b-12d3-a456-426614174000'),
-                'ivan123',
-                new Name('Ivan', 'Nikitin')
+                new UUID('123e4567-e89b-12d3-a456-4266141740drthr'),
+                'user1',
+                new Name('test', 'test2')
             )
         );
 

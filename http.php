@@ -6,16 +6,19 @@ use GeekBrains\LevelTwo\Blog\Repositories\CommentsRepository\SqliteCommentsRepos
 use GeekBrains\LevelTwo\Blog\Repositories\PostsRepository\SqlitePostsRepository;
 use GeekBrains\LevelTwo\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use GeekBrains\LevelTwo\Http\Actions\Comments\CreateComment;
+use GeekBrains\LevelTwo\Http\Actions\Likes\AddLike;
+use GeekBrains\LevelTwo\Http\Actions\Likes\FindLikesByPost;
 use GeekBrains\LevelTwo\Http\Actions\Posts\CreatePost;
 use GeekBrains\LevelTwo\Http\Actions\Posts\DeletePost;
 use GeekBrains\LevelTwo\Http\Actions\User\CreateUser;
 use GeekBrains\LevelTwo\Http\Actions\User\FindByUsername;
+use GeekBrains\LevelTwo\Http\Auth\LogIn;
 use GeekBrains\LevelTwo\Http\ErrorResponse;
 use GeekBrains\LevelTwo\Http\Request;
 use GeekBrains\LevelTwo\Http\SuccessfulResponse;
+use Psr\Log\LoggerInterface;
 
 $container = require __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/vendor/autoload.php';
 
 $request = new Request(
 $_GET, 
@@ -51,6 +54,7 @@ $routes = [
         '/post' => DeletePost::class
     ],
     'POST' => [
+        '/login' => LogIn::class,
         '/user/create' => CreateUser::class,
         '/posts/create' => CreatePost::class,
         '/posts/comment' => CreateComment::class,

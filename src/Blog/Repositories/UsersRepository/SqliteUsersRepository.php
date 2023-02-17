@@ -23,13 +23,14 @@ class SqliteUsersRepository implements UsersRepositoryInterface
     {
         $statement = $this->connection->prepare(
             'INSERT INTO users (first_name, last_name, uuid, username)
-VALUES (:first_name, :last_name, :uuid, :username)'
+VALUES (:first_name, :last_name, :uuid, :username, :password)'
         );
          $statement->execute([
             ':uuid' => $user->getUuid(),
             ':first_name' => $user->getName()->first(),
             ':last_name' => $user->getName()->last(),
-            ':username' => $user->getUsername()
+            ':username' => $user->getUsername(),
+            ':password' => $user->getPassword(),
         ]);
         $this->logger->info('User creat: ' . $user->getUuid());
     }
@@ -79,8 +80,7 @@ VALUES (:first_name, :last_name, :uuid, :username)'
         return $this->getUser($statement, 'Random User');
     }
 
-    //PDOStateme $statement - убрал потому как не смог разобраться почему в ошибку уходил
-
+  
     /**
      * @throws UserNotFoundException
      */
@@ -89,7 +89,7 @@ VALUES (:first_name, :last_name, :uuid, :username)'
 
         $result = $statement->fetch(PDO::FETCH_ASSOC);
 
-        if (null === $result) {
+        if (!$result) {
             $this->logger->warning('User no found: ' . $username);
             throw new UserNotFoundException(
                 "Cannot find user: $username"
@@ -99,6 +99,7 @@ VALUES (:first_name, :last_name, :uuid, :username)'
         return new User(
             new UUID($result['uuid']),
             $result['username'],
+            $result['password']??'',
             new Name($result['first_name'], $result['last_name'])
         );
     }
