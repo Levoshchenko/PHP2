@@ -5,6 +5,11 @@
             "GeekBrains\\LevelTwo\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "GeekBrains\\LevelTwo\\UnitTests\\": "tests/"
+    }
+    },
     "authors": [
         {
             "name": "Кристина Левощенко",
@@ -27,4 +32,4 @@
     "scripts": {
         "test": "phpunit tests --testdox --colors"
     }
-}
+},

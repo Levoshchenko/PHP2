@@ -22,20 +22,26 @@ class SqliteUsersRepository implements UsersRepositoryInterface
     public function save(User $user): void
     {
         $statement = $this->connection->prepare(
-            'INSERT INTO users (first_name, last_name, uuid, username)
-VALUES (:first_name, :last_name, :uuid, :username, :password)'
+            'INSERT INTO users (
+                    uuid, 
+                    username, 
+                    password, 
+                    first_name, 
+                    last_name
+                ) 
+            VALUES (
+                    :uuid, 
+                    :username, 
+                    :password, 
+                    :first_name, 
+                    :last_name
+                )
+            ON CONFLICT (uuid) DO UPDATE SET
+                first_name = :first_name,
+                last_name = :last_name'
         );
-         $statement->execute([
-            ':uuid' => $user->getUuid(),
-            ':first_name' => $user->getName()->first(),
-            ':last_name' => $user->getName()->last(),
-            ':username' => $user->getUsername(),
-            ':password' => $user->getPassword(),
-        ]);
-        $this->logger->info('User creat: ' . $user->getUuid());
     }
-
-    /**
+        /**
      * @throws UserNotFoundException
      * @throws InvalidArgumentException
      */
